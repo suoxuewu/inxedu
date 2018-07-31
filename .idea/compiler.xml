@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="inxedu-bean" />
+        <module name="inxedu-common-util" />
+        <module name="inxedu-interface" />
+        <module name="inxedu-manage-service" />
+        <module name="inxedu-manage-web" />
+        <module name="inxedu-service-util" />
+        <module name="inxedu-web-util" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="inxedu-bean" target="1.8" />
+      <module name="inxedu-common-util" target="1.8" />
+      <module name="inxedu-interface" target="1.8" />
+      <module name="inxedu-manage-service" target="1.8" />
+      <module name="inxedu-manage-web" target="1.8" />
+      <module name="inxedu-parent" target="1.8" />
+      <module name="inxedu-service-util" target="1.8" />
+      <module name="inxedu-web-util" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

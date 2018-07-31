@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.inxedu.manage.mapper.EduTeacherMapper">
+    <resultMap id="BaseResultMap" type="com.edu.inxedu.manage.bean.EduTeacher" autoMapping="true">
+        <id column="ID" property="id" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <select id="queryPage" parameterType="Integer" resultMap="BaseResultMap">
+        select
+        *
+        from edu_teacher ORDER BY sort DESC
+        <!--<where>-->
+        <!--&lt;!&ndash;<if test="querytext != null">&ndash;&gt;-->
+        <!--name like concat('%',#{querytext},'%')-->
+        <!--&lt;!&ndash;</if>&ndash;&gt;-->
+        <!--</where>-->
+        limit #{st},#{pa}
+    </select>
+
+    <!-- Integer getCount(Map<String, Object> paramMap); -->
+    <select id="count" parameterType="map" resultType="integer">
+        select
+        count(*)
+        from edu_teacher
+        <!--<where>-->
+        <!--&lt;!&ndash;<if test="querytext != null">&ndash;&gt;-->
+        <!--name like concat('%',#{querytext},'%')-->
+        <!--&lt;!&ndash;</if>&ndash;&gt;-->
+        <!--</where>-->
+    </select>
+
+</mapper>

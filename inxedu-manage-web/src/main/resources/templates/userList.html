@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pagination.css">
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor:pointer;
+        }
+        table tbody tr:nth-child(odd){background:#F4F4F4;}
+        table tbody td:nth-child(even){color:#C00;}
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">学生列表</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form" style="float:left;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">查询条件</div>
+                                <input id="queryText" class="form-control has-success" type="text" placeholder="请输入查询条件">
+                            </div>
+                        </div>
+                        <button id="queryBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
+<!--$("tbody").html(content);
+$("#sel").append(option);
+-->
+                        请选择状态：<select id="sel">
+                                         <option value="12">0</option>
+                                         <option value="22">1</option>
+                                   </select>
+
+                        <!--$("select option:selected")-->
+                    </form>
+<button  type="button" id="btnExport" class="btn btn-danger"  style="float:right;margin-left:10px;">
+    <i class=" glyphicon glyphicon-remove"></i>导出exexl表</button>
+<!--onclick="javascript:method1('tableExcel');"-->
+<button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='${APP_PATH}/user/toAdd.htm'">
+    <i class="glyphicon glyphicon-plus"></i> 新增</button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+
+                        <table id="tableExcel" class="table  table-bordered">
+                            <thead>
+                            <tr >
+                                <th width="30">#</th>
+                                <th width="30"><input id="allcheckbox" type="checkbox"></th>
+                                 <th width="30">userId</th>
+                                <th>用户名</th>
+                                <th >性别</th>
+                                <th >注册时间</th>
+                                <th colspan="2" type="align:center">状态</th>
+                                <th >操作</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <!--这里放表格中的内容-->
+                            </tbody>
+
+                            <tfoot>
+                            <tr >
+                                <td colspan="6" align="center">
+                                    <!--<ul class="pagination">-->
+                                    <div id="Pagination" class="pagination"></div>
+                                    <!--</ul>-->
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="jquery/jquery-2.1.1.min.js"></script>
+<script src="jquery/jquery.table2excel.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="script/docs.min.js"></script>
+<script src="jquery/layer/layer.js"></script>
+<script src="jquery/jquery.pagination.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-table-export.js"></script>
+<script src="js/tableExport.js"></script>
+<script src="js/xlsx.core.min.js"></script>
+<script src="js/FileSaver.min.js"></script>
+<script type="text/javascript">
+    /*原始的 能用的*/
+    $(document).ready(function () {
+        $("#btnExport").click(function () {
+            $("#tableExcel").table2excel({
+                exclude  : ".noExl", //过滤位置的 css 类名
+                filename : "1" + new Date().getTime() + ".xls", //文件名称
+                name: "Excel Document Name.xlsx",
+//                 + ".xls"
+                exclude_img: true,
+                exclude_links: true,
+                exclude_inputs: true
+            });
+        });
+    });
+
+    //    $("#btnExport").click(function () {
+//    $("#table").bootstrapTable({ // 对应table标签的id
+//        url: "/export",   //AJAX获取表格数据的url
+//        striped: true,                      //是否显示行间隔色(斑马线)
+//        pagination: true,                   //是否显示分页（*）
+//        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+//        paginationLoop: false,		  //当前页是边界时是否可以继续按
+//        queryParams: function (params) {    // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+//            return {
+//                limit: params.limit, // 每页要显示的数据条数
+//                offset: params.offset, // 每页显示数据的开始行号
+//                //sort: params.sort, // 要排序的字段
+//                //sortOrder: params.order, // 排序规则
+//                //dataId: $("#dataId").val() // 额外添加的参数
+//            }
+//        },//传递参数（*）
+//        pageNumber:1,                       //初始化加载第一页，默认第一页
+//        pageSize: 10,                       //每页的记录行数（*）
+//        pageList: [10, 25, 50, 100,'all'],  //可供选择的每页的行数（*）
+//        contentType: "application/x-www-form-urlencoded",//一种编码。在post请求的时候需要用到。这里用的get请求，注释掉这句话也能拿到数据
+//        //search: true,                     //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//        strictSearch: false,		  //是否全局匹配,false模糊匹配
+//        showColumns: true,                  //是否显示所有的列
+//        showRefresh: true,                  //是否显示刷新按钮
+//        minimumCountColumns: 2,             //最少允许的列数
+//        clickToSelect: false,               //是否启用点击选中行
+//        //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+//        //uniqueId: "id",                   //每一行的唯一标识，一般为主键列
+//        showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+//        cardView: false,                    //是否显示详细视图
+//        detailView: false,                  //是否显示父子表
+//        cache: false,                       // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+//        sortable: true,                     //是否启用排序
+//        sortOrder: "asc",                   //排序方式
+//        sortName: 'sn', // 要排序的字段
+//        columns: [
+//            {
+//                field: 'i', // 返回json数据中的name
+//                title: '#', // 表格表头显示文字
+//                align: 'center', // 左右居中
+//                valign: 'middle' // 上下居中
+//            },
+//            {
+//                field: 'userId', // 返回json数据中的name
+//                title: 'userId', // 表格表头显示文字
+//                align: 'center', // 左右居中
+//                valign: 'middle' // 上下居中
+//            }, {
+//                field: 'userName',
+//                title: '用户名',
+//                align: 'center',
+//                valign: 'middle'
+//            }, {
+//                field: 'sex',
+//                title: '性别',
+//                align: 'center',
+//                valign: 'middle',
+//                sortable:true
+//            }, {
+//                field: 'createTime',
+//                title: '注册时间',
+//                align: 'center',
+//                valign: 'middle',
+//            }, {
+//                field: 'isAvalible',
+//                title: '状态',
+//                align: 'center',
+//                valign: 'middle',
+//            }
+//        ],
+//        onLoadSuccess: function(){  //加载成功时执行
+//            console.info("加载成功");
+//        },
+//        onLoadError: function(){  //加载失败时执行
+//            console.info("加载数据失败");
+//        },
+//
+//        showExport: phoneOrPc(),              //是否显示导出按钮(此方法是自己写的目的是判断终端是电脑还是手机,电脑则返回true,手机返回falsee,手机不显示按钮)
+//        exportDataType: "all",              //basic', 'all', 'selected'.
+//        exportTypes:['excel','xlsx','xls'],	    //导出类型
+//        //exportButton: $('#btn_export'),     //为按钮btn_export  绑定导出事件  自定义导出按钮(可以不用)
+//        exportOptions:{
+//            //ignoreColumn: [0,0],            //忽略某一列的索引
+//            fileName: '数据导出',              //文件名称设置
+//            worksheetName: 'Sheet1',          //表格工作区名称
+//            tableName: '学生显示表',
+//            excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+//            //onMsoNumberFormat: DoOnMsoNumberFormat
+//        }
+//    });
+//    });
+//    /*判断终端是手机还是电脑--用于判断文件是否导出(电脑需要导出)*/
+//    function phoneOrPc(){
+//        var sUserAgent = navigator.userAgent.toLowerCase();
+//        var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+//        var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+//        var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+//        var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+//        var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+//        var bIsAndroid = sUserAgent.match(/android/i) == "android";
+//        var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+//        var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+//        if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
+
+
+    $(function () {
+        $(".list-group-item").click(function(){
+            if ( $(this).find("ul") ) {
+                $(this).toggleClass("tree-closed");
+                if ( $(this).hasClass("tree-closed") ) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+        queryPage(0);
+    });
+
+//    $("#queryBtn").click(function(){
+//        var queryText =  $("#queryText").val();
+//        dataObj.queryText = queryText;
+//        queryPage(1);
+//    });
+    function queryPage(pageno){
+        var dataObj = {
+            "pageno":1,
+            "pagesize":3
+        };
+        //dataObj.pageno = (pageno+1);
+        $.ajax({
+           url:"user/queryPage",
+           type:"post",
+           data:dataObj,
+           beforeSend:function () {
+               layer.msg('数据查询中', {icon: 6});
+           },
+           success:function (result) {
+               if(result.success){
+                   var pageObj = result.data;
+                   var list = pageObj.datas;
+                   var content = "";
+                   $("tbody").html(content);
+                   $.each(list,function (i,n) {
+                       content+="<tr>";
+                       content+="	<td>"+(i+1)+"</td>";
+                       content+="	<td><input type='checkbox' value='"+n.userId+"'></td>";
+                       content+="	<td>"+n.userId+"</td>";
+                       content+="	<td>"+n.userName+"</td>";
+                       content+="	<td>"+n.sex+"</td>";
+                       content+="	<td>"+n.createTime+"</td>";
+                       content+="	<td>"+n.isAvalible+"</td>";
+                       if(n.isAvalible=='0'){
+                           content+="	<td>不正常</td>";
+                       }else {
+                           content+="	<td>正常</td>";
+                       }
+                       content+="	<td>";
+                       content+="		<button type='button' onclick='window.location.href=\"${APP_PATH}/advert/edit.htm?pageno="+pageObj.pageno+"&id="+n.id+"\"' class='btn btn-primary btn-xs'>";
+                       content+="			<i class=' glyphicon glyphicon-pencil'>修改密码</i>";
+                       content+="		</button>";
+                       content+="		<button type='button' class='btn btn-danger btn-xs' onclick='deleteAdvert("+n.id+",\""+n.name+"\")'>";
+                       content+="			<i class=' glyphicon glyphicon-remove'>冻结</i>";
+                       content+="		</button>";
+                       content+="	</td>";
+                       content+="</tr>";
+                   });
+                   $("tbody").html(content);
+                   var num_entries = pageObj.totalsize;
+                   $("#Pagination").pagination(num_entries, {
+                       num_edge_entries: 1,
+                       num_display_entries: 3,
+                       callback: queryPage,
+                       items_per_page:pageObj.pagesize,
+                       current_page:(pageObj.pageno-1),
+                       prev_text:"上一页",
+                       next_text:"下一页"
+                   });
+               }else {
+                   layer.msg("广告分页查询数据失败", {time:1000, icon:5, shift:6});
+               }
+           } ,
+           error:function () {
+               layer.msg("广告分页查询数据错误", {time:1000, icon:5, shift:6});
+           } 
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport"/>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pagination.css">
+    <link href="dist/dialog.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+</head>
+    <script src="dist/mDialogMin.js"></script>
+    <style>
+        *{margin: 0;padding: 0;}
+        .mDialogs{display: inline-block;padding: 0 20px; text-decoration: none;outline: none; margin: 20px 10px; background: #222;color:#fff; line-height: 40px; text-align: center}
+        .dialog_load2.c_alert_wrap{background: none;box-shadow: none}.dialog_load.c_alert_wrap{background: none;}.dialog_load .c_alert_con{background: rgba(0,0,0,.7);padding:24px 25px}.c_alert_con img{vertical-align: top}
+    </style>
+<body>
+
+<div id="myrole">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div><a class="navbar-brand" style="font-size:32px;color:red" href="#">角色 》》角色管理</a></div>
+            </div>
+        </div>
+    </nav>
+    <fieldset>
+        <div class="mt20">
+            <form action="" method="post" id="updateRoleFunctionForm" onsubmit="return updateRole();">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="commonTab01">
+                    <tbody>
+                    <tr>
+                        <td width="20%" align="center">
+                            <div class="form-group">
+                                <label>请选择角色</label>
+                                <select>
+                                    <option value="0">请选择角色</option>
+                                    <option th:each="role:${roleList}"
+                                            th:value="${role.roleId}" th:text="${role.roleName}">Credit card</option>
+                                </select>
+                            </div>
+                            <!--<select th:each="role:${roleList}" id="roleId" >-->
+                            <!--<option value="0">请选择角色</option>-->
+                            <!--<option th:value="${role.roleId}"> th:text="${role.roleName}"</option>-->
+                            <!--</select>-->
+                        </td>
+                        <!--onchange="onchangeRole(this.value);"-->
+                        <!--   <c:forEach items="${roleList}" var="roleList">
+                                                        <option value="${roleList.roleId}">${roleList.roleName}</option>
+                                                    </c:forEach>
+                                                   <option th:value="${role.id}"></option>-->
+                        <td width="80%">
+                            <input type="hidden" value="" name="selectedFunctionIds" id="selectedFunctionIds"/>
+                            <div id="ztreedemo" class="ztree"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <a class="mDialogs" id="mdialog4" href="javascript:;" class="btn btn-danger">修改角色名称</a>
+                            <input type="button" value="添加角色" onclick="window.location.href='addRole'" class="btn btn-danger"/>
+                            <input type="button" value="保存" onclick="saveRoleFunction()" class="btn btn-danger"/>
+                            <input type="button" value="删除选中角色" onclick="delRole();" class="btn btn-danger"/>
+                            <font color="red">(*红字为功能权限，其他为菜单权限)</font>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+
+        <!-- 添加角色 -->
+        <div id="addRole" class="addRole" style="display: none">
+            <table border="0">
+                <tbody>
+                <tr>
+                    <td align="center" colspan="2">
+                        <input type="button" onclick="saveRole()" id="save-btn" value="确定" class="btn btn-danger"/>
+                        <input type="button" onclick="cancelSave();" value="取消" class="btn btn-danger"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+    <!-- 添加角色 -->
+    <script src="jquery/jquery-2.1.1.min.js"></script>
+    <script src="jquery/jquery.table2excel.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="script/docs.min.js"></script>
+    <script src="jquery/layer/layer.js"></script>
+    <script src="jquery/jquery.pagination.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="js/bootstrap-table-export.js"></script>
+    <script src="js/tableExport.js"></script>
+    <script src="js/xlsx.core.min.js"></script>
+    <script src="js/FileSaver.min.js"></script>
+    <script type="text/javascript">
+        mdialog4.onclick = function(){
+            Dialog.init('<input type="text" placeholder="请输入5个字符"  style="margin:8px 0;width:100%;padding:11px 8px;font-size:15px; border:1px solid #999;"/>',{
+                title : '请输入新的角色名称！',
+                button : {
+                    确定 : function(){
+                        if(this.querySelector('input').value.length >= 2){
+                            //Dialog.init('你输入的内容是：'+this.querySelector('input').value);
+                            //$("select option:selected"),取得下拉选项的值
+                            //能拿到id别的还有做吗？
+                          var s = $("select option:selected").val();
+                            alert("这是下拉选项的"+s);
+                            Dialog.close(this);
+                        }else{
+                            Dialog.init('你输入的内容不符合要求！',1100);
+                        };
+                    },
+                    点击关闭 : function(){
+                        Dialog.init('数据正在保存',1000);
+                        Dialog.close(this);
+                    }
+                }
+            });
+        }
+
+
+        $(docunment).ready(function () {
+            window.location.href = "roleList";
+        });
+    </script>
+</div>
+</body>
+</html>

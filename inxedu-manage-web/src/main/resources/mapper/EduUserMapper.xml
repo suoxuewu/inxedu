@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.inxedu.manage.mapper.EduUserMapper">
+    <resultMap id="BaseResultMap" type="com.edu.inxedu.manage.bean.EduUser" autoMapping="true">
+        <id column="USER_ID" property="userId" jdbcType="INTEGER" />
+    </resultMap>
+
+<!-- parameterType="int"-->
+    <select id="queryPage" parameterType="int" resultMap="BaseResultMap">
+        select
+        *
+        from edu_user
+        <!--<where>-->
+        <!--&lt;!&ndash;<if test="querytext != null">&ndash;&gt;-->
+        <!--name like concat('%',#{querytext},'%')-->
+        <!--&lt;!&ndash;</if>&ndash;&gt;-->
+        <!--</where>-->
+        limit #{st},#{pa}
+    </select>
+
+    <!-- Integer getCount(Map<String, Object> paramMap); -->
+    <select id="count" parameterType="map" resultType="integer">
+        select
+        count(*)
+        from edu_user
+        <!--<where>-->
+        <!--&lt;!&ndash;<if test="querytext != null">&ndash;&gt;-->
+        <!--name like concat('%',#{querytext},'%')-->
+        <!--&lt;!&ndash;</if>&ndash;&gt;-->
+        <!--</where>-->
+    </select>
+    <!--<delete id="deleteBatchUser">-->
+        <!--delete from t_user where id in-->
+        <!--<foreach collection="array" open="(" separator="," close=")" item="userid">-->
+            <!--#{userid}-->
+        <!--</foreach>-->
+    <!--</delete>-->
+  <delete id="deleteUser">
+      DELETE from edu_user WHERE  id in
+          <foreach collection="list" open="(" close=")" item="userid">
+              #{userid}
+          </foreach>
+  </delete>
+</mapper>

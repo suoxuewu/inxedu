@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/inxedu-bean" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inxedu-common-util" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inxedu-interface" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inxedu-manage-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inxedu-manage-web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inxedu-parent" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inxedu-service-util" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inxedu-web-util" charset="UTF-8" />
+    <file url="file://D:/JAEE8EveryDay/inxedu/inxedu-bean" charset="UTF-8" />
+  </component>
+</project>

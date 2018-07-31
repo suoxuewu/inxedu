@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/inxedu-bean/inxedu-bean.iml" filepath="$PROJECT_DIR$/inxedu-bean/inxedu-bean.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inxedu-common-util/inxedu-common-util.iml" filepath="$PROJECT_DIR$/inxedu-common-util/inxedu-common-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inxedu-interface/inxedu-interface.iml" filepath="$PROJECT_DIR$/inxedu-interface/inxedu-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inxedu-manage-service/inxedu-manage-service.iml" filepath="$PROJECT_DIR$/inxedu-manage-service/inxedu-manage-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inxedu-manage-web/inxedu-manage-web.iml" filepath="$PROJECT_DIR$/inxedu-manage-web/inxedu-manage-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inxedu-parent/inxedu-parent.iml" filepath="$PROJECT_DIR$/inxedu-parent/inxedu-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inxedu-service-util/inxedu-service-util.iml" filepath="$PROJECT_DIR$/inxedu-service-util/inxedu-service-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inxedu-web-util/inxedu-web-util.iml" filepath="$PROJECT_DIR$/inxedu-web-util/inxedu-web-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/inxedu2.iml" filepath="$PROJECT_DIR$/.idea/inxedu2.iml" />
+    </modules>
+  </component>
+</project>

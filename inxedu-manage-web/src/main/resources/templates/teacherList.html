@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pagination.css">
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor:pointer;
+        }
+        table tbody tr:nth-child(odd){background:#F4F4F4;}
+        table tbody td:nth-child(even){color:#C00;}
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">教师列表</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form" style="float:left;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">查询条件</div>
+                                <input id="queryText" class="form-control has-success" type="text" placeholder="请输入查询条件">
+                            </div>
+                        </div>
+                        <button id="queryBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
+<!--$("tbody").html(content);
+$("#sel").append(option);
+-->
+                        请选择状态：<select id="sel">
+                                         <option value="12">0</option>
+                                         <option value="22">1</option>
+                                   </select>
+
+                        <!--$("select option:selected")-->
+                    </form>
+<button  type="button" id="btnExport" class="btn btn-danger"  style="float:right;margin-left:10px;">
+    <i class=" glyphicon glyphicon-remove"></i>导出exexl表</button>
+<!--onclick="javascript:method1('tableExcel');"-->
+<button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='addTeacher'">
+    <i class="glyphicon glyphicon-plus"></i> 新增</button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+
+                        <table id="tableExcel" class="table  table-bordered">
+                            <thead>
+                            <tr >
+                                <th width="30">#</th>
+                                <th width="30"><input id="allcheckbox" type="checkbox"></th>
+                                <th>名称</th>
+                                <th >头衔</th>
+                                <th >资历</th>
+                                <th type="align:center">简介</th>
+                                <th >添加时间</th>
+                                <th >排序</th>
+                                <th colspan="2">操作</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <!--这里放表格中的内容-->
+                            </tbody>
+
+                            <tfoot>
+                            <tr >
+                                <td colspan="9" align="center">
+                                    <!--<ul class="pagination">-->
+                                    <div id="Pagination" class="pagination"></div>
+                                    <!--</ul>-->
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="jquery/jquery-2.1.1.min.js"></script>
+<script src="jquery/jquery.table2excel.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="script/docs.min.js"></script>
+<script src="jquery/layer/layer.js"></script>
+<script src="jquery/jquery.pagination.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-table-export.js"></script>
+<script src="js/tableExport.js"></script>
+<script src="js/xlsx.core.min.js"></script>
+<script src="js/FileSaver.min.js"></script>
+<script type="text/javascript">
+    /*原始的 能用的*/
+    $(document).ready(function () {
+        $("#btnExport").click(function () {
+            $("#tableExcel").table2excel({
+                exclude  : ".noExl", //过滤位置的 css 类名
+                filename : "1" + new Date().getTime() + ".xls", //文件名称
+                name: "Excel Document Name.xlsx",
+//                 + ".xls"
+                exclude_img: true,
+                exclude_links: true,
+                exclude_inputs: true
+            });
+        });
+    });
+    $(function () {
+        $(".list-group-item").click(function(){
+            if ( $(this).find("ul") ) {
+                $(this).toggleClass("tree-closed");
+                if ( $(this).hasClass("tree-closed") ) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+        queryPage(0);
+    });
+    function queryPage(pageIndex){
+        var dataObj = {
+            "pageno":pageIndex+1,
+            "pagesize":5
+        };
+        $.ajax({
+           url:"teacher/queryPage",
+           type:"post",
+           data:dataObj,
+           beforeSend:function () {
+               layer.msg('数据查询中', {icon: 6});
+           },
+           success:function (result) {
+               if(result.success){
+                   var pageObj = result.data;
+                   var list = pageObj.datas;
+                   var content = "";
+                   $("tbody").html(content);
+                   $.each(list,function (i,n) {
+                       content+="<tr>";
+                       content+="	<td>"+(i+1)+"</td>";
+                       content+="	<td><input type='checkbox' value='"+n.id+"'></td>";
+                       content+="	<td>"+n.name+"</td>";
+                       content+="	<td>"+n.isStar+"</td>";
+                       content+="	<td>"+n.education+"</td>";
+                       content+="	<td>"+n.career+"</td>";
+                       content+="	<td>"+n.createTime+"</td>";
+                       content+="	<td>"+n.sort+"</td>";
+                       if(n.isStar=='1'){
+                           content+="<td>高级讲师</td>";
+                       }else {
+                           content+="<td>首席讲师</td>";
+                       }
+                       content+="<td>";
+                       content+="		<button type='button' onclick='window.location.href=\"${APP_PATH}/advert/edit.htm?pageno="+pageObj.pageno+"&id="+n.id+"\"' class='btn btn-primary btn-xs'>";
+                       content+="			<i class=' glyphicon glyphicon-pencil'>修改</i>";
+                       content+="		</button>";
+                       content+="		<button type='button' class='btn btn-danger btn-xs' onclick='deleteAdvert("+n.id+",\""+n.name+"\")'>";
+                       content+="			<i class=' glyphicon glyphicon-remove'>删除</i>";
+                       content+="		</button>";
+                       content+="	</td>";
+                       content+="</tr>";
+                   });
+                   $("tbody").html(content);
+                   var num_entries = pageObj.totalsize;
+                   $("#Pagination").pagination(num_entries, {
+                       num_edge_entries: 1,
+                       num_display_entries: 3,
+                       callback: queryPage,
+                       items_per_page:pageObj.pagesize,
+                       current_page:(pageObj.pageno-1),
+                       prev_text:"上一页",
+                       next_text:"下一页"
+                   });
+               }else {
+                   layer.msg("广告分页查询数据失败", {time:1000, icon:5, shift:6});
+               }
+           } ,
+           error:function () {
+               layer.msg("广告分页查询数据错误", {time:1000, icon:5, shift:6});
+           } 
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/inxedu-bean/pom.xml" />
+        <option value="$PROJECT_DIR$/inxedu-common-util/pom.xml" />
+        <option value="$PROJECT_DIR$/inxedu-interface/pom.xml" />
+        <option value="$PROJECT_DIR$/inxedu-manage-service/pom.xml" />
+        <option value="$PROJECT_DIR$/inxedu-manage-web/pom.xml" />
+        <option value="$PROJECT_DIR$/inxedu-parent/pom.xml" />
+        <option value="$PROJECT_DIR$/inxedu-service-util/pom.xml" />
+        <option value="$PROJECT_DIR$/inxedu-web-util/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+</project>
