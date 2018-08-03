@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>教师修改</title>
+</head>
+<body>
+<article class="page-container">
+    <form class="form form-horizontal"method="post" th:each="te:${list}"
+          id="saveTeacherForm" enctype="multipart/form-data">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off" th:value="${te.name}" placeholder="名称" id="name" name="name">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>头衔：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off"  placeholder="头衔" id="isStar" name="isStar">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>资历：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off"  placeholder="资历" id="education" name="education">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>简介：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off"  placeholder="简介" id="career" name="career">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>添加时间：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off"  placeholder="添加时间" id="createTime" name="createTime">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>排序：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off"  placeholder="排序" id="sort" name="sort">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>排序：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="file" id="file" name="file" placeholder="请上传头像图片">
+                <input type="text" id="id" name="id">
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <input id="saveBtn" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</article>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        $("#saveBtn").click(function(){
+            var id = $("#id").val();
+            var options = {
+                url:"updateEduTeacher?id="+id,
+                beforeSubmit : function(){
+                    layer.msg('数据正在保存中', {icon: 6});
+                },
+                success : function(result){
+                    if(result.success){
+                        layer.msg("广告数据保存成功", {time:1000, icon:6});
+                        window.location.href="/teacherList";
+                    }else{
+                        layer.msg("广告数据保存失败", {time:1000, icon:5, shift:6});
+                    }
+                }
+            };
+            //通过jquery的form表单异步提交表单
+            $("#saveTeacherForm").ajaxSubmit(options);
+            return ;
+        });
+    });
+
+    //    $(function(){
+//        $("#updatePswd").validate({
+//            rules:{
+//                newpassword:{
+//                    required:true,
+//                    minlength:6,
+//                    maxlength:16
+//                },
+//                newpassword2:{
+//                    required:true,
+//                    minlength:6,
+//                    maxlength:16,
+//                    equalTo: "#password2"
+//                },
+//            },
+//            onkeyup:false,
+//            focusCleanup:true,
+//            success:"valid",
+//            submitHandler:function(form){
+//                $(form).find(":submit").attr("disabled", true).attr("value", "保存中...");
+//                var password = $("#password2").val();
+//                var userId = $("#userId").val();
+//                $(form).ajaxSubmit({
+//                    type: 'post',
+//                    url: 'updatePwd',
+//                    data:{
+//                        userId:userId,
+//                        password:password
+//                    },
+//                    success: function(result){
+//                        //获取父层
+//                        var index = parent.layer.getFrameIndex(window.name);
+//                        //刷新父层
+//                        parent.location.reload();
+//                        //关闭弹出层
+//                        parent.layer.close(index);
+//                        layer.msg('修改成功!',{icon: 6,time:2000});
+//                        parent.location.href="projectManagerVo/show";
+//                    }
+//                });
+//            }
+//
+//        });
+//    });
+
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

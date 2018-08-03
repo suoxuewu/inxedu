@@ -21,10 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 public class TeacherController extends BaseController{
@@ -36,6 +33,18 @@ public class TeacherController extends BaseController{
     /**
      * doAdd文件上传
      */
+    @RequestMapping(value = "getTeacherById")
+    public String teacherAdd(String id,Model model){
+        List<EduTeacher> list = null;
+        if(id!=null){
+            list = teacherService.getAllTeachers(Integer.valueOf(id));
+        }
+        model.addAttribute("list",list);
+        double[] myList = new double[4];
+        int length = myList.length;
+        return "updateTeacher";
+    }
+
 
     @RequestMapping(value="teacherAdd",method = RequestMethod.POST)
     @ResponseBody
@@ -49,8 +58,13 @@ public class TeacherController extends BaseController{
             String iconPath = UUID.randomUUID().toString()+extName;//2222l.jpg文件名
             ServletContext servletContext = session.getServletContext();
             String realPath = servletContext.getRealPath("/pic");//硬盘上的路径
-            String path = realPath+"\\adv\\"+iconPath;
-            mfile.transferTo(new File(iconPath));
+            String path = realPath+"\\adv\\";
+            File file = new File(path);
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            path = path+iconPath;
+            mfile.transferTo(new File(path));
             //这里必须登录才能获取到user
             eduTeacher.setStatus(0);
             eduTeacher.setUpdateTime(new Date());

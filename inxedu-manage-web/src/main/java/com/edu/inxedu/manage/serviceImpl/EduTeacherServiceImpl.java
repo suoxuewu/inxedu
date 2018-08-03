@@ -9,6 +9,7 @@ import com.edu.inxedu.manage.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -40,5 +41,11 @@ public class EduTeacherServiceImpl implements TeacherService {
     @Override
     public void addTacher(EduTeacher eduTeacher) {
         eduTeacherMapper.insertSelective(eduTeacher);
+    }
+
+    @Override
+    public List<EduTeacher> getAllTeachers(Integer id) {
+        List<EduTeacher> eduTeachers = eduTeacherMapper.selectAll();
+        return eduTeachers;
     }
 }

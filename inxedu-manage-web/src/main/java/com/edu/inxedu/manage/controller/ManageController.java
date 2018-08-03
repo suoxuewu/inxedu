@@ -14,6 +14,10 @@ import java.util.List;
 @Controller
 public class ManageController {
 
+    @RequestMapping(value="/permission")
+    public String permission(){
+        return "role/permission";
+    }
     @RequestMapping(value="/addRole")
     public String addRole(){
         return "role/addRole";

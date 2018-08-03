@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pagination.css">
+    <link rel="stylesheet" href="ztree/zTreeStyle.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor:pointer;
+        }
+        table tbody tr:nth-child(odd){background:#F4F4F4;}
+        table tbody td:nth-child(even){color:#C00;}
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px; color:red;">在线教育平台后台管理模块 》》 权限维护</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i>权限树</h3>
+                </div>
+
+                <!--这里放权限树-->
+                <div class="panel-body">
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+
+                <div>
+                    <a onclick="window.location.href='index'" style="color:orangered">回到首页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="jquery/jquery-2.1.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="script/docs.min.js"></script>
+<script src="jquery/layer/layer.js"></script>
+<script src="ztree/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript">
+
+        var setting = {
+            check: {
+                enable: true
+            },
+            async:{
+                enable:true,
+                url:"/permission/loadData",
+                dataType: "text",
+                autoParam:["id", "name=n", "level=lv"]
+            },
+            view: {
+                //添加自定义设置
+                addDiyDom: function(treeId, treeNode){//添加字体treeId = 容器的id   icoObj相当于span
+                    var icoObj = $("#" + treeNode.tId + "_ico"); // 利用ico属性实现自定义文档 tId = permissionTree_1, $("#permissionTree_1_ico")
+                    if ( treeNode.icon ) {
+                        icoObj.removeClass("button ico_docu ico_open").addClass("fa fa-fw " + treeNode.icon).css("background","");
+                    }
+                },
+                //显示按钮组
+                addHoverDom: function(treeId, treeNode){
+                    var aObj = $("#" + treeNode.tId + "_a"); // tId = permissionTree_1, ==> $("#permissionTree_1_a")
+                    aObj.attr("href", "javascript:;");//取消href属性
+                    if (treeNode.editNameFlag || $("#btnGroup"+treeNode.tId).length>0) return;
+                    var s = '<span id="btnGroup'+treeNode.tId+'">';
+                    if ( treeNode.level == 0 ) {
+                        //添加
+                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="window.location.href=\'permission/toAdd?id='+treeNode.id+'\'">&nbsp;&nbsp;添加权限<i class="fa fa-fw fa-plus rbg "></i></a>';
+                    } else if ( treeNode.level == 1 ) {
+                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;"  onclick="window.location.href=\'permission/toUpdate?id='+treeNode.id+'\'">&nbsp;&nbsp;修改权限信息<i class="fa fa-fw fa-edit rbg "></i></a>';
+                        if (treeNode.children.length == 0) {
+                            s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="deletePermission('+treeNode.id+',\''+treeNode.name+'\')" >&nbsp;&nbsp;删除权限<i class="fa fa-fw fa-times rbg "></i></a>';
+                        }
+                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="window.location.href=\'/permission/toAdd?id='+treeNode.id+'\'" >&nbsp;&nbsp;添加权限<i class="fa fa-fw fa-plus rbg "></i></a>';
+                    } else if ( treeNode.level == 2 ) {
+                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;"  onclick="window.location.href=\'${APP_PATH}/permission/toUpdate.htm?id='+treeNode.id+'\'">&nbsp;&nbsp;修改权限信息<i class="fa fa-fw fa-edit rbg "></i></a>';
+                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" onclick="deletePermission('+treeNode.id+',\''+treeNode.name+'\')">&nbsp;&nbsp;删除权限<i class="fa fa-fw fa-times rbg "></i></a>';
+                    }
+                    s += '</span>';
+                    aObj.after(s);
+                },
+                removeHoverDom: function(treeId, treeNode){//鼠标移开，按钮消失
+                    $("#btnGroup"+treeNode.tId).remove();
+                }
+            }
+
+        };
+
+    $( $.fn.zTree.init($("#treeDemo"), setting));
+//    $.fn.zTree.init($("#treeDemo"), setting);//异步加载许可树的数据
+
+    //var zNodes = {};
+//    var index = -1;
+//    $.ajax({
+//        type:"post",
+//        url:"/permission/loadData",
+//        data:{},
+//        beforeSend:function(){
+//            index = layer.load(2, {time: 10*1000});
+//        },
+//        success:function(result){
+//            layer.close(index);
+//            if(result.success){
+//               alert(result);
+//              // zNodes = result;
+//                zNodes = result.data;
+//            }
+//        },
+//    });
+
+</script>
+</body>
+</html>

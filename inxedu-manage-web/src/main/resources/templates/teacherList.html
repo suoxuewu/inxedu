@@ -1,10 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
@@ -12,7 +11,15 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/pagination.css">
     <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
-    <style>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/htmleaf-demo.css">
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+    <style type="text/css">
         .tree li {
             list-style-type: none;
             cursor:pointer;
@@ -76,7 +83,7 @@ $("#sel").append(option);
                             <thead>
                             <tr >
                                 <th width="30">#</th>
-                                <th width="30"><input id="allcheckbox" type="checkbox"></th>
+                                <th width="30"><input id='allcheckbox' type="checkbox"></th>
                                 <th>名称</th>
                                 <th >头衔</th>
                                 <th >资历</th>
@@ -101,40 +108,41 @@ $("#sel").append(option);
                             </tr>
                             </tfoot>
                         </table>
+                        <div>
+                            <a onclick="window.location.href='index'" style="color:orangered">回到首页</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <script src="jquery/jquery-2.1.1.min.js"></script>
-<script src="jquery/jquery.table2excel.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script src="script/docs.min.js"></script>
 <script src="jquery/layer/layer.js"></script>
 <script src="jquery/jquery.pagination.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
-<script src="js/bootstrap-table-export.js"></script>
-<script src="js/tableExport.js"></script>
 <script src="js/xlsx.core.min.js"></script>
-<script src="js/FileSaver.min.js"></script>
+
+<!--导出excle插件-->
+<script type="text/javascript" src="external/jszip.js"></script>
+<script type="text/javascript" src="external/FileSaver.js"></script>
+<script type="text/javascript" src="scripts/excel-gen.js"></script>
+<script type="text/javascript" src="scripts/demo.page.js"></script>
+
+<!--_footer 作为公共模版分离出去-->
+<!--<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>-->
+<!--<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>-->
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script src="js/tableExport.js"></script>
 <script type="text/javascript">
-    /*原始的 能用的*/
-    $(document).ready(function () {
-        $("#btnExport").click(function () {
-            $("#tableExcel").table2excel({
-                exclude  : ".noExl", //过滤位置的 css 类名
-                filename : "1" + new Date().getTime() + ".xls", //文件名称
-                name: "Excel Document Name.xlsx",
-//                 + ".xls"
-                exclude_img: true,
-                exclude_links: true,
-                exclude_inputs: true
-            });
-        });
-    });
+
     $(function () {
         $(".list-group-item").click(function(){
             if ( $(this).find("ul") ) {
@@ -147,7 +155,71 @@ $("#sel").append(option);
             }
         });
         queryPage(0);
+        datetimeFormat_2(longTypeDate);
     });
+    function datetimeFormat_2(longTypeDate) {
+        var datetimeType = "";
+        var date = new Date();
+        date.setTime(longTypeDate);
+        datetimeType += date.getFullYear();   //年
+        datetimeType += "-" + getMonth(date); //月
+        datetimeType += "-" + getDay(date);   //日
+        datetimeType += "&nbsp;&nbsp;" + getHours(date);   //时
+        datetimeType += ":" + getMinutes(date);      //分
+        datetimeType += ":" + getSeconds(date);      //分
+        return datetimeType;
+    }
+
+    //返回 01-12 的月份值
+    function getMonth(date) {
+        var month = "";
+        month = date.getMonth() + 1; //getMonth()得到的月份是0-11
+        if (month < 10) {
+            month = "0" + month;
+        }
+        return month;
+    }
+
+    //返回01-30的日期
+    function getDay(date) {
+        var day = "";
+        day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        return day;
+    }
+
+    //返回小时
+    function getHours(date) {
+        var hours = "";
+        hours = date.getHours();
+        if (hours < 10) {
+            hours = "0" + hours;
+        }
+        return hours;
+    }
+
+    //返回分
+    function getMinutes(date) {
+        var minute = "";
+        minute = date.getMinutes();
+        if (minute < 10) {
+            minute = "0" + minute;
+        }
+        return minute;
+    }
+
+    //返回秒
+    function getSeconds(date) {
+        var second = "";
+        second = date.getSeconds();
+        if (second < 10) {
+            second = "0" + second;
+        }
+        return second;
+    }
+
     function queryPage(pageIndex){
         var dataObj = {
             "pageno":pageIndex+1,
@@ -169,12 +241,12 @@ $("#sel").append(option);
                    $.each(list,function (i,n) {
                        content+="<tr>";
                        content+="	<td>"+(i+1)+"</td>";
-                       content+="	<td><input type='checkbox' value='"+n.id+"'></td>";
+                       content+="	<td><input  type='checkbox' value='"+n.id+"'></td>";
                        content+="	<td>"+n.name+"</td>";
                        content+="	<td>"+n.isStar+"</td>";
                        content+="	<td>"+n.education+"</td>";
                        content+="	<td>"+n.career+"</td>";
-                       content+="	<td>"+n.createTime+"</td>";
+                       content+="	<td>"+datetimeFormat_2(n.createTime)+"</td>";
                        content+="	<td>"+n.sort+"</td>";
                        if(n.isStar=='1'){
                            content+="<td>高级讲师</td>";
@@ -182,10 +254,10 @@ $("#sel").append(option);
                            content+="<td>首席讲师</td>";
                        }
                        content+="<td>";
-                       content+="		<button type='button' onclick='window.location.href=\"${APP_PATH}/advert/edit.htm?pageno="+pageObj.pageno+"&id="+n.id+"\"' class='btn btn-primary btn-xs'>";
+                       content+="		<button type='button' class='btn btn-primary btn-xs' onclick='editTeacher("+n.id+")'>";
                        content+="			<i class=' glyphicon glyphicon-pencil'>修改</i>";
                        content+="		</button>";
-                       content+="		<button type='button' class='btn btn-danger btn-xs' onclick='deleteAdvert("+n.id+",\""+n.name+"\")'>";
+                       content+="		<button  type='button' class='btn btn-danger btn-xs' onclick='deleteAdvert("+n.id+",\""+n.name+"\")'>";
                        content+="			<i class=' glyphicon glyphicon-remove'>删除</i>";
                        content+="		</button>";
                        content+="	</td>";
@@ -211,6 +283,28 @@ $("#sel").append(option);
            } 
         });
     }
+    $(function() {
+        $("#btnExport").click(function() {
+            var title = "woshi";
+            var fileName = title;
+            $("#tableExcel").tableExport({type: 'excel',escape: 'false',fileName: fileName,type: "csv"});
+        });
+    });
+
+
+    function editTeacher(id){
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-lan',
+            title: '修改密码',
+            fix: false,
+            shadeClose: true,
+            maxmin: true,
+            area: ['500px', '500px'],
+            content: 'getTeacherById?id='+id
+        });
+    }
+
 </script>
 
 </body>
